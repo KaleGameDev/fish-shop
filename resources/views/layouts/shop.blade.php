@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>@yield('title','Fish Shop')</title>
+  <title>@yield('title', 'Fish Shop')</title>
 
   <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -25,18 +25,31 @@
       --card:#ffffff;
       --bg:#f6f7fb;
     }
-    body{ font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto; background:var(--bg); color:var(--ink); }
+
+    body{
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
     .nav-glass{
       background: rgba(255,255,255,.82);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(15,23,42,.06);
     }
+
     .brand-badge{
-      width:40px;height:40px;border-radius:12px;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
       background: linear-gradient(135deg, var(--brand), var(--brand2));
-      display:grid;place-items:center;color:#fff;font-weight:800;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 800;
       box-shadow: 0 10px 25px rgba(13,110,253,.20);
     }
+
     .hero{
       border-radius: 22px;
       background:
@@ -45,64 +58,90 @@
         linear-gradient(180deg, #ffffff, #fbfbff);
       border: 1px solid rgba(15,23,42,.06);
       box-shadow: 0 22px 55px rgba(2, 6, 23, .08);
-      overflow:hidden;
-      position:relative;
+      overflow: hidden;
+      position: relative;
     }
+
     .hero:after{
       content:"";
-      position:absolute; inset:-60px -60px auto auto;
-      width:220px; height:220px; border-radius:999px;
+      position:absolute;
+      inset:-60px -60px auto auto;
+      width:220px;
+      height:220px;
+      border-radius:999px;
       background: linear-gradient(135deg, rgba(13,110,253,.35), rgba(20,184,166,.25));
-      filter: blur(0px);
       transform: rotate(18deg);
       opacity:.7;
     }
+
     .btn-brand{
       background: linear-gradient(135deg, var(--brand), var(--brand2));
       border: none;
       box-shadow: 0 14px 30px rgba(13,110,253,.18);
     }
-    .btn-brand:hover{ filter: brightness(.98); transform: translateY(-1px); }
+
+    .btn-brand:hover{
+      filter: brightness(.98);
+      transform: translateY(-1px);
+    }
+
     .search-pill{
       border-radius: 999px;
       border: 1px solid rgba(15,23,42,.10);
       background:#fff;
       box-shadow: 0 10px 25px rgba(2,6,23,.06);
     }
+
     .card-product{
       border: 1px solid rgba(15,23,42,.06);
       border-radius: 18px;
-      overflow:hidden;
+      overflow: hidden;
       background: var(--card);
       box-shadow: 0 12px 30px rgba(2,6,23,.06);
       transition: .2s ease;
       height: 100%;
     }
-    .card-product:hover{ transform: translateY(-4px); box-shadow: 0 22px 55px rgba(2,6,23,.10); }
+
+    .card-product:hover{
+      transform: translateY(-4px);
+      box-shadow: 0 22px 55px rgba(2,6,23,.10);
+    }
+
     .thumb{
-      height: 210px; width:100%;
+      height: 210px;
+      width: 100%;
       object-fit: cover;
       background: #eef2ff;
     }
+
     .price{
-      font-weight:800;
+      font-weight: 800;
       background: rgba(20,184,166,.12);
       color: #0f766e;
       padding: .35rem .6rem;
       border-radius: 999px;
       border: 1px solid rgba(20,184,166,.20);
-      white-space:nowrap;
+      white-space: nowrap;
     }
+
     .chip{
-      font-size:.75rem;
+      font-size: .75rem;
       color: var(--muted);
       background: rgba(100,116,139,.10);
       border: 1px solid rgba(100,116,139,.18);
       padding: .25rem .5rem;
       border-radius: 999px;
     }
-    .muted{ color: var(--muted); }
-    .section-title{ font-weight:800; letter-spacing:-.02em; }
+
+    .muted{
+      color: var(--muted);
+    }
+
+    .section-title{
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+
     .feature{
       border-radius: 18px;
       border: 1px solid rgba(15,23,42,.06);
@@ -111,52 +150,142 @@
       box-shadow: 0 12px 30px rgba(2,6,23,.05);
       height:100%;
     }
+
     footer{
       border-top: 1px solid rgba(15,23,42,.06);
       background: #fff;
+    }
+
+    .auth-btn{
+      white-space: nowrap;
+      border-radius: 999px !important;
+      padding: .55rem 1rem !important;
+      line-height: 1 !important;
+    }
+
+    .auth-wrap{
+      display: flex;
+      gap: .5rem;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
+
+    .nav-actions{
+      flex: 0 0 auto;
+    }
+
+    .cart-badge{
+      font-size: .7rem;
+      min-width: 1.2rem;
+      height: 1.2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 .35rem;
+    }
+
+    @media (max-width: 991.98px){
+      .auth-wrap{
+        flex-wrap: wrap;
+        margin-top: 1rem;
+      }
+
+      .nav-actions{
+        width: 100%;
+      }
     }
   </style>
 </head>
 
 <body>
+@php
+    $cartCount = 0;
+
+    if (auth()->check()) {
+        $activeCart = auth()->user()->activeCart;
+
+        if ($activeCart) {
+            $cartCount = $activeCart->items()->sum('quantity');
+        }
+    }
+@endphp
 
 <nav class="navbar navbar-expand-lg nav-glass sticky-top">
   <div class="container py-2">
     <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('shop.index') }}">
-      <span class="brand-badge"></span>
-      <span class="fw-extrabold" style="font-weight:800;">Fish Shop</span>
+      <span class="brand-badge">🐟</span>
+      <span style="font-weight:800;">Fish Shop</span>
     </a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="nav">
       <form class="ms-lg-4 my-3 my-lg-0 w-100" method="GET" action="{{ route('shop.index') }}">
         <div class="input-group search-pill">
-          <span class="input-group-text bg-transparent border-0 ps-3"><i class="bi bi-search"></i></span>
-          <input class="form-control border-0" name="q" value="{{ request('q') }}" placeholder="Tìm cá: cá hồi, cá thu, cá ngừ...">
-          <button class="btn btn-brand text-white rounded-pill px-4 me-2 my-2" type="submit">Tìm</button>
+          <span class="input-group-text bg-transparent border-0 ps-3">
+            <i class="bi bi-search"></i>
+          </span>
+          <input
+            class="form-control border-0"
+            name="q"
+            value="{{ request('q') }}"
+            placeholder="Tìm cá: cá hồi, cá thu, cá ngừ..."
+          >
+          <button class="btn btn-brand text-white rounded-pill px-4 me-2 my-2" type="submit">
+            Tìm
+          </button>
         </div>
       </form>
 
       <div class="nav-actions auth-wrap ms-lg-3">
         @auth
-            <span class="d-none d-lg-inline muted">Xin chào, <b>{{ auth()->user()->name }}</b></span>
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button class="btn btn-outline-dark auth-btn">
-                <i class="bi bi-box-arrow-right me-1"></i> Đăng xuất
-                </button>
-            </form>
-            @else
-            <a class="btn btn-outline-dark auth-btn" href="{{ route('login') }}">
-                <i class="bi bi-person me-1"></i> Đăng nhập
-            </a>
-            <a class="btn btn-brand text-white auth-btn" href="{{ route('register') }}">
-                <i class="bi bi-stars me-1"></i> Đăng ký
-            </a>
-            @endauth
+          <a class="btn btn-outline-secondary auth-btn" href="{{ route('warehouse.login.form') }}">
+            <i class="bi bi-box-seam me-1"></i>
+            <span class="d-none d-lg-inline">Kho</span>
+          </a>
+
+          <a class="btn btn-outline-dark auth-btn" href="{{ route('profile.show') }}">
+            <i class="bi bi-person-circle me-1"></i>
+            <span class="d-none d-lg-inline">Tài khoản</span>
+          </a>
+
+          <a class="btn btn-outline-dark auth-btn position-relative" href="{{ route('cart.index') }}">
+            <i class="bi bi-bag me-1"></i>
+            <span class="d-none d-lg-inline">Giỏ hàng</span>
+
+            @if($cartCount > 0)
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge">
+                {{ $cartCount }}
+              </span>
+            @endif
+          </a>
+
+          <span class="d-none d-lg-inline muted">
+            Xin chào, <b>{{ auth()->user()->name }}</b>
+          </span>
+
+          <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button class="btn btn-outline-dark auth-btn" type="submit">
+              <i class="bi bi-box-arrow-right me-1"></i> Đăng xuất
+            </button>
+          </form>
+        @else
+          <a class="btn btn-outline-secondary auth-btn" href="{{ route('warehouse.login.form') }}">
+            <i class="bi bi-box-seam me-1"></i>
+            <span class="d-none d-lg-inline">Kho</span>
+          </a>
+
+          <a class="btn btn-outline-dark auth-btn" href="{{ route('login') }}">
+            <i class="bi bi-person me-1"></i> Đăng nhập
+          </a>
+
+          <a class="btn btn-brand text-white auth-btn" href="{{ route('register') }}">
+            <i class="bi bi-stars me-1"></i> Đăng ký
+          </a>
+        @endauth
       </div>
     </div>
   </div>

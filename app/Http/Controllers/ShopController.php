@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use Illuminate\Http\Request;
 
 class ShopController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $q = request('q');
-
-        $products = \App\Models\Product::query()
-            ->when($q, fn($qr) => $qr->where('name', 'like', "%$q%"))
-            ->orderByDesc('id')
+        $products = Product::query()
+            ->when($request->q, function ($query) use ($request) {
+                $query->where('name', 'like', '%' . $request->q . '%');
+            })
+            ->latest()
             ->paginate(9);
 
         return view('shop.index', compact('products'));

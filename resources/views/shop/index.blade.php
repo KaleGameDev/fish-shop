@@ -2,6 +2,13 @@
 @section('title','Cửa hàng')
 
 @section('content')
+@if(session('success'))
+  <div class="alert alert-success rounded-4">{{ session('success') }}</div>
+@endif
+
+@if(session('error'))
+  <div class="alert alert-danger rounded-4">{{ session('error') }}</div>
+@endif
 <div class="hero p-4 p-md-5 mb-4">
   <div class="row align-items-center g-4 position-relative">
     <div class="col-lg-7">
@@ -102,9 +109,18 @@
           <a class="btn btn-outline-dark rounded-pill w-100" href="{{ route('shop.show', $p) }}">
             <i class="bi bi-eye me-1"></i> Chi tiết
           </a>
-          <button class="btn btn-brand text-white rounded-pill w-100" disabled>
-            <i class="bi bi-bag-plus me-1"></i> Thêm giỏ
-          </button>
+          @if(auth()->check())
+              <form action="{{ route('cart.add', $p) }}" method="POST" class="w-100">
+                  @csrf
+                  <button class="btn btn-brand text-white rounded-pill w-100">
+                      <i class="bi bi-bag-plus me-1"></i> Thêm giỏ
+                  </button>
+              </form>
+          @else
+              <a class="btn btn-brand text-white rounded-pill w-100" href="{{ route('login') }}">
+                  <i class="bi bi-person me-1"></i> Đăng nhập để mua
+              </a>
+          @endif
         </div>
       </div>
     </div>

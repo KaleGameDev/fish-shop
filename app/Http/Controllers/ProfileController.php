@@ -14,6 +14,14 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
+
+    public function show()
+    {
+        return view('profile.show', [
+            'user' => auth()->user(),
+        ]);
+    }
+    
     public function edit(Request $request): View
     {
         return view('profile.edit', [
@@ -36,7 +44,6 @@ class ProfileController extends Controller
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
-
     /**
      * Delete the user's account.
      */

@@ -2,6 +2,13 @@
 @section('title', $product->name)
 
 @section('content')
+@if(session('success'))
+    <div class="alert alert-success rounded-4">{{ session('success') }}</div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger rounded-4">{{ session('error') }}</div>
+@endif
 <a href="{{ route('shop.index') }}" class="btn btn-link px-0 mb-3">
   <i class="bi bi-arrow-left"></i> Quay lại
 </a>
@@ -25,9 +32,18 @@
       <p class="muted mb-4">{{ $product->description }}</p>
 
       <div class="d-flex gap-2">
-        <button class="btn btn-brand text-white rounded-pill px-4 py-2" disabled>
-          <i class="bi bi-bag-plus me-1"></i> Thêm vào giỏ
-        </button>
+        @if(auth()->check())
+            <form action="{{ route('cart.add', $product) }}" method="POST">
+                @csrf
+                <button class="btn btn-brand text-white rounded-pill px-4 py-2">
+                    <i class="bi bi-bag-plus me-1"></i> Thêm vào giỏ
+                </button>
+            </form>
+        @else
+            <a href="{{ route('login') }}" class="btn btn-brand text-white rounded-pill px-4 py-2">
+                <i class="bi bi-person me-1"></i> Đăng nhập để mua
+            </a>
+        @endif
         <button class="btn btn-outline-dark rounded-pill px-4 py-2" disabled>
           <i class="bi bi-lightning me-1"></i> Mua ngay
         </button>
