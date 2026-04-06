@@ -73,7 +73,11 @@
 <div class="warehouse-shell">
     <div class="warehouse-sidebar">
         <div class="warehouse-brand">📦 Quản lý kho</div>
-
+        <a href="{{ route('warehouse.dashboard') }}"
+           class="warehouse-link {{ request()->routeIs('warehouse.dashboard') ? 'active' : '' }}">
+            <i class="bi bi-pie-chart"></i>
+            <span>Tổng quan</span>
+        </a>
         <a href="{{ route('warehouse.products.index') }}"
            class="warehouse-link {{ request()->routeIs('warehouse.products.index') ? 'active' : '' }}">
             <i class="bi bi-box-seam"></i>
@@ -85,13 +89,29 @@
             <i class="bi bi-plus-circle"></i>
             <span>Thêm sản phẩm</span>
         </a>
+           <a href="{{ route('warehouse.orders.index') }}"
+           class="warehouse-link {{ request()->routeIs('warehouse.orders.*') ? 'active' : '' }}">
+            <i class="bi bi-receipt"></i>
+            <span>Đơn hàng</span>
+        </a>
+        <a href="{{ route('users.index') }}"
+           class="warehouse-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
+            <i class="bi bi-people"></i>
+            <span>Quản lý Users</span>
+        </a>
+
+        <a href="{{ route('admin.reviews.index') }}"
+           class="warehouse-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
+            <i class="bi bi-star-half"></i>
+            <span>Quản lý đánh giá</span>
+        </a>
 
         <a href="{{ route('shop.index') }}" class="warehouse-link">
             <i class="bi bi-shop"></i>
             <span>Về cửa hàng</span>
         </a>
-
-        <form method="POST" action="{{ route('warehouse.logout') }}" class="mt-4">
+         
+        <form method="POST" action="{{ route('logout') }}" class="mt-4">
             @csrf
             <button class="btn btn-outline-light rounded-pill w-100">
                 <i class="bi bi-box-arrow-left me-1"></i> Thoát kho

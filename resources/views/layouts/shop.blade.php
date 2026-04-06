@@ -5,13 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>@yield('title', 'Fish Shop')</title>
 
-  <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
-  <!-- Google Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -25,11 +21,17 @@
       --card:#ffffff;
       --bg:#f6f7fb;
     }
+    main {
+      flex-grow: 1; /* Thằng này sẽ tự động giãn ra để đẩy footer xuống đáy */
+    }
 
     body{
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto;
       background: var(--bg);
       color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
     .nav-glass{
@@ -222,18 +224,19 @@
     </button>
 
     <div class="collapse navbar-collapse" id="nav">
-      <form class="ms-lg-4 my-3 my-lg-0 w-100" method="GET" action="{{ route('shop.index') }}">
-        <div class="input-group search-pill">
+      <form class="ms-lg-4 my-3 my-lg-0 flex-grow-1" method="GET" action="{{ route('shop.index') }}">
+        <div class="input-group search-pill flex-nowrap align-items-center">
           <span class="input-group-text bg-transparent border-0 ps-3">
             <i class="bi bi-search"></i>
           </span>
           <input
-            class="form-control border-0"
+            class="form-control border-0 shadow-none"
             name="q"
             value="{{ request('q') }}"
-            placeholder="Tìm cá: cá hồi, cá thu, cá ngừ..."
+            placeholder="Tìm cá..."
+            style="min-width: 130px;"
           >
-          <button class="btn btn-brand text-white rounded-pill px-4 me-2 my-2" type="submit">
+          <button class="btn btn-brand text-white rounded-pill px-3 px-lg-4 me-1 my-1" type="submit">
             Tìm
           </button>
         </div>
@@ -241,14 +244,21 @@
 
       <div class="nav-actions auth-wrap ms-lg-3">
         @auth
-          <a class="btn btn-outline-secondary auth-btn" href="{{ route('warehouse.login.form') }}">
-            <i class="bi bi-box-seam me-1"></i>
-            <span class="d-none d-lg-inline">Kho</span>
-          </a>
+          @if(auth()->user()->role === 'admin')
+            <a class="btn btn-outline-danger auth-btn" href="{{ route('warehouse.products.index') }}">
+                <i class="bi bi-shield-lock me-1"></i>
+                <span class="d-none d-lg-inline">Quản trị Kho</span>
+            </a>
+          @endif
 
           <a class="btn btn-outline-dark auth-btn" href="{{ route('profile.show') }}">
             <i class="bi bi-person-circle me-1"></i>
             <span class="d-none d-lg-inline">Tài khoản</span>
+          </a>
+
+          <a class="btn btn-outline-dark auth-btn" href="{{ route('orders.history') }}">
+            <i class="bi bi-clock-history me-1"></i>
+            <span class="d-none d-lg-inline">Lịch sử đơn hàng</span>
           </a>
 
           <a class="btn btn-outline-dark auth-btn position-relative" href="{{ route('cart.index') }}">
@@ -262,22 +272,17 @@
             @endif
           </a>
 
-          <span class="d-none d-lg-inline muted">
-            Xin chào, <b>{{ auth()->user()->name }}</b>
-          </span>
+          <div class="d-none d-lg-flex align-items-center text-muted px-2 m-0" style="height: 100%;">
+            Xin chào,&nbsp;<b class="text-dark">{{ auth()->user()->name }}</b>
+          </div>
 
-          <form method="POST" action="{{ route('logout') }}">
+          <form method="POST" action="{{ route('logout') }}" class="m-0 d-flex align-items-center">
             @csrf
             <button class="btn btn-outline-dark auth-btn" type="submit">
               <i class="bi bi-box-arrow-right me-1"></i> Đăng xuất
             </button>
           </form>
         @else
-          <a class="btn btn-outline-secondary auth-btn" href="{{ route('warehouse.login.form') }}">
-            <i class="bi bi-box-seam me-1"></i>
-            <span class="d-none d-lg-inline">Kho</span>
-          </a>
-
           <a class="btn btn-outline-dark auth-btn" href="{{ route('login') }}">
             <i class="bi bi-person me-1"></i> Đăng nhập
           </a>
