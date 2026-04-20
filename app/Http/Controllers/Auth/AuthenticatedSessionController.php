@@ -28,7 +28,13 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+// THÊM ĐOẠN CHECK ROLE Ở ĐÂY
+        if ($request->user()->role === 'admin') {
+            return redirect()->route('warehouse.products.index'); // Chuyển thẳng vào Kho
+        }
+
+        // Nếu là khách hàng bình thường thì về trang chủ Shop
+        return redirect()->route('shop.index');
     }
 
     /**

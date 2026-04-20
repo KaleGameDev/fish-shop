@@ -3,12 +3,18 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Schema;   // <-- THÊM DÒNG NÀY
+use Illuminate\Pagination\Paginator; // <-- THÊM DÒNG NÀY
 
 class AppServiceProvider extends ServiceProvider
 {
+    public function register(): void
+    {
+        //
+    }
+
     public function boot(): void
     {
-        Schema::defaultStringLength(191);
+        // BẬT PHÂN TRANG BẰNG BOOTSTRAP 5
+        Paginator::useBootstrapFive(); 
     }
 }

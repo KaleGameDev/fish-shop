@@ -2,13 +2,6 @@
 @section('title','Cửa hàng')
 
 @section('content')
-@if(session('success'))
-  <div class="alert alert-success rounded-4">{{ session('success') }}</div>
-@endif
-
-@if(session('error'))
-  <div class="alert alert-danger rounded-4">{{ session('error') }}</div>
-@endif
 <div class="hero p-4 p-md-5 mb-4">
   <div class="row align-items-center g-4 position-relative">
     <div class="col-lg-7">
@@ -24,9 +17,7 @@
         <a href="#list" class="btn btn-brand text-white rounded-pill px-4 py-2">
           <i class="bi bi-bag-check me-1"></i> Xem sản phẩm
         </a>
-        <a href="{{ route('users.index') }}" class="btn btn-outline-dark rounded-pill px-4 py-2">
-          <i class="bi bi-gear me-1"></i> Quản lý Users
-        </a>
+       
       </div>
 
       <div class="d-flex gap-3 mt-4 muted">
@@ -88,9 +79,9 @@
 <div class="row g-3">
 @forelse($products as $p)
   <div class="col-12 col-sm-6 col-lg-4">
-    <div class="card-product">
+    <div class="card-product d-flex flex-column">
       <img class="thumb" src="{{ $p->image ?: 'https://picsum.photos/seed/fish'.$p->id.'/900/600' }}" alt="">
-      <div class="p-3">
+      <div class="p-3 d-flex flex-column flex-grow-1">
         <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
           <div>
             <div class="fw-bold fs-5">{{ $p->name }}</div>
@@ -105,20 +96,21 @@
           <span class="chip"><i class="bi bi-patch-check me-1"></i> Fresh</span>
         </div>
 
-        <div class="d-flex gap-2">
-          <a class="btn btn-outline-dark rounded-pill w-100" href="{{ route('shop.show', $p) }}">
+        <div class="d-flex gap-2 mt-auto">
+          <a class="btn btn-outline-dark rounded-pill w-100 d-flex justify-content-center align-items-center py-2" href="{{ route('shop.show', $p) }}">
             <i class="bi bi-eye me-1"></i> Chi tiết
           </a>
+          
           @if(auth()->check())
-              <form action="{{ route('cart.add', $p) }}" method="POST" class="w-100">
+              <form action="{{ route('cart.add', $p) }}" method="POST" class="w-100 m-0 d-flex">
                   @csrf
-                  <button class="btn btn-brand text-white rounded-pill w-100">
+                  <button class="btn btn-brand text-white rounded-pill w-100 d-flex justify-content-center align-items-center py-2">
                       <i class="bi bi-bag-plus me-1"></i> Thêm giỏ
                   </button>
               </form>
-          @else
-              <a class="btn btn-brand text-white rounded-pill w-100" href="{{ route('login') }}">
-                  <i class="bi bi-person me-1"></i> Đăng nhập để mua
+         @else
+              <a class="btn btn-brand text-white rounded-pill w-100 d-flex justify-content-center align-items-center py-2" href="{{ route('login') }}">
+                  <i class="bi bi-box-arrow-in-right me-1"></i> Đăng nhập & Mua
               </a>
           @endif
         </div>
@@ -132,8 +124,8 @@
 @endforelse
 </div>
 
-<div class="mt-4">
-  {{ $products->appends(request()->query())->links() }}
+<div class="d-flex justify-content-center mt-5">
+    {{ $products->withQueryString()->links() }}
 </div>
 @endsection
 

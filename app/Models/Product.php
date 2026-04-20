@@ -18,4 +18,9 @@ class Product extends Model
     {
         return $this->hasMany(CartItem::class);
     }
+    // Một sản phẩm có nhiều đánh giá
+    public function reviews()
+    {
+        return $this->hasMany(Review::class)->latest();
+    }
 }

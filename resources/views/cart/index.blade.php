@@ -197,16 +197,17 @@
     </a>
   </div>
 
+  {{-- Thông báo --}}
   @if(session('success'))
-    <div class="alert alert-success rounded-4">{{ session('success') }}</div>
+    <div class="alert alert-success rounded-4 border-0 shadow-sm mb-4">
+        <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
+    </div>
   @endif
 
   @if(session('error'))
-    <div class="alert alert-danger rounded-4">{{ session('error') }}</div>
-  @endif
-
-  @if($errors->any())
-    <div class="alert alert-danger rounded-4">{{ $errors->first() }}</div>
+    <div class="alert alert-danger rounded-4 border-0 shadow-sm mb-4">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ session('error') }}
+    </div>
   @endif
 
   @php
@@ -220,6 +221,7 @@
 
   @if($cart->items->count() > 0)
     <div class="row g-4">
+      {{-- Danh sách sản phẩm --}}
       <div class="col-lg-8">
         @foreach($cart->items as $item)
           <div class="cart-item">
@@ -247,7 +249,7 @@
                     <form action="{{ route('cart.remove', $item) }}" method="POST">
                       @csrf
                       @method('DELETE')
-                      <button class="btn btn-outline-danger rounded-pill">
+                      <button class="btn btn-outline-danger rounded-pill border-0">
                         <i class="bi bi-trash me-1"></i> Xóa
                       </button>
                     </form>
@@ -258,15 +260,9 @@
                       <i class="bi bi-box-seam me-1"></i>
                       Tồn kho: {{ $item->product->stock }}
                     </span>
-
                     <span class="chip">
                       <i class="bi bi-snow2 me-1"></i>
                       Bảo quản lạnh
-                    </span>
-
-                    <span class="chip">
-                      <i class="bi bi-truck me-1"></i>
-                      Giao nhanh
                     </span>
                   </div>
 
@@ -291,7 +287,7 @@
                       >
 
                       <button class="btn btn-outline-dark rounded-pill">
-                        <i class="bi bi-arrow-repeat me-1"></i> Cập nhật
+                        <i class="bi bi-arrow-repeat me-1"></i>
                       </button>
                     </form>
 
@@ -307,6 +303,7 @@
         @endforeach
       </div>
 
+      {{-- Tóm tắt & Thanh toán --}}
       <div class="col-lg-4">
         <div class="cart-box summary-card">
           <h4 class="fw-bold mb-3">Tóm tắt đơn hàng</h4>
@@ -330,18 +327,43 @@
 
           <div class="summary-total mb-4">
             <span>Tổng cộng</span>
-            <span>{{ number_format($total) }}đ</span>
+            <span class="text-brand">{{ number_format($total) }}đ</span>
           </div>
 
-          <button class="btn btn-brand text-white rounded-pill w-100 py-2 mb-2" disabled>
-            <i class="bi bi-credit-card me-1"></i> Thanh toán
-          </button>
+          {{-- Form Thanh Toán Thực Tế --}}
+          <form action="{{ route('cart.checkout') }}" method="POST" class="mb-3">
+            @csrf
+
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-dark">Phương thức thanh toán</label>
+              <select name="payment_method" class="form-select rounded-pill px-3">
+                  <option value="cod">Thanh toán khi nhận hàng (COD)</option>
+                  <option value="vnpay">Thanh toán qua VNPAY</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label small fw-bold text-dark">Số điện thoại nhận hàng</label>
+                <input type="text" name="phone" class="form-control rounded-pill px-3" 
+                       value="{{ auth()->user()->phone }}" required>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label small fw-bold text-dark">Địa chỉ giao cá tận nơi</label>
+                <textarea name="address" class="form-control rounded-4 px-3" rows="2" 
+                          placeholder="Số nhà, tên đường, phường/xã..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-brand text-white rounded-pill w-100 py-3 fw-bold shadow-sm">
+                <i class="bi bi-shield-check me-2"></i> XÁC NHẬN THANH TOÁN
+            </button>
+          </form>
 
           <form action="{{ route('cart.clear') }}" method="POST">
             @csrf
             @method('DELETE')
-            <button class="btn btn-outline-danger rounded-pill w-100">
-              <i class="bi bi-x-circle me-1"></i> Xóa toàn bộ giỏ
+            <button class="btn btn-link text-danger w-100 text-decoration-none small">
+              <i class="bi bi-x-circle me-1"></i> Xóa toàn bộ giỏ hàng
             </button>
           </form>
         </div>
@@ -352,7 +374,7 @@
       <div class="emoji">🛒</div>
       <h3 class="fw-bold mb-2">Giỏ hàng đang trống</h3>
       <p class="muted mb-4">Hãy chọn vài món cá tươi ngon cho hôm nay.</p>
-      <a href="{{ route('shop.index') }}" class="btn btn-brand text-white rounded-pill px-4">
+      <a href="{{ route('shop.index') }}" class="btn btn-brand text-white rounded-pill px-5 py-2">
         <i class="bi bi-bag me-1"></i> Mua sắm ngay
       </a>
     </div>
