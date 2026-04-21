@@ -179,4 +179,5 @@
         color: #ffc107 !important; 
     }
 </style>
+<x-similar-products :product="$product" />
 @endsection
