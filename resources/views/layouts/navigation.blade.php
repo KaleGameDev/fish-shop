@@ -37,21 +37,7 @@
                         </button>
                     </x-slot>
 
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
+                    <x-slot name="content">\n                        <x-dropdown-link :href="route('profile.edit')">\n                            {{ __('Profile') }}\n                        </x-dropdown-link>\n\n                        <!-- Theme Toggle -->\n                        <button @click="toggleDark()" class="block w-full px-4 py-2 text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 transition duration-150 ease-in-out">\n                            <i :class="darkMode ? 'bi bi-sun-fill me-2' : 'bi bi-moon-stars-fill me-2'"></i>\n                            {{ darkMode ? __('Chế độ sáng') : __('Chế độ tối') }}\n                        </button>\n\n                        <!-- Authentication -->\n                        <form method="POST" action="{{ route('logout') }}">\n                            @csrf\n\n                            <x-dropdown-link :href="route('logout')"\n                                    onclick="event.preventDefault();\n                                                this.closest('form').submit();">\n                                {{ __('Log Out') }}\n                            </x-dropdown-link>\n                        </form>
                     </x-slot>
                 </x-dropdown>
             </div>

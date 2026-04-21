@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi">
+<html lang="vi" x-data="themeToggle">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    :root{
+    :root {
       --brand:#0d6efd;
       --brand2:#14b8a6;
       --ink:#0f172a;
@@ -22,7 +22,7 @@
       --bg:#f6f7fb;
     }
     main {
-      flex-grow: 1; /* Thằng này sẽ tự động giãn ra để đẩy footer xuống đáy */
+      flex-grow: 1;
     }
 
     body{
@@ -197,6 +197,8 @@
       }
     }
   </style>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
 <body>
@@ -243,6 +245,12 @@
       </form>
 
       <div class="nav-actions auth-wrap ms-lg-3">
+        <!-- Theme Toggle -->
+        <button @click="toggleDark()" :aria-label="darkMode ? 'Chế độ sáng' : 'Chế độ tối'" class="btn btn-outline-secondary auth-btn">
+          <i :class="darkMode ? 'bi bi-sun' : 'bi bi-moon-stars-fill'"></i>
+          <span class="d-none d-lg-inline">Chủ đề</span>
+        </button>
+
         @auth
           @if(auth()->user()->role === 'admin')
             <a class="btn btn-outline-danger auth-btn" href="{{ route('warehouse.products.index') }}">
@@ -313,6 +321,22 @@
     </div>
   </div>
 </footer>
+
+<script>
+document.addEventListener('alpine:init', () => {
+  Alpine.data('themeToggle', () => ({
+    darkMode: localStorage.theme === 'dark' || (!localStorage.theme && window.matchMedia('(prefers-color-scheme: dark)').matches),
+    init() {
+      document.documentElement.classList.toggle('dark', this.darkMode);
+    },
+    toggleDark() {
+      this.darkMode = !this.darkMode;
+      localStorage.theme = this.darkMode ? 'dark' : 'light';
+      document.documentElement.classList.toggle('dark', this.darkMode);
+    }
+  }));
+});
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
